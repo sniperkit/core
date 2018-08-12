@@ -1,12 +1,16 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // couchbase封装扩展
 // 提供异步操作结果channel统一管理调用
 package couchbase
 
-// 
+//
 import (
 	"log"
-	
-//	gcb "github.com/couchbaselabs/go-couchbase"
+	//	gcb "github.com/couchbaselabs/go-couchbase"
 )
 
 // db操作
@@ -19,17 +23,17 @@ type IResult interface {
 	Handle()
 }
 
-// 
+//
 type CbEngineEx struct {
-	*CbEngine						// bucket
-	chOp			chan IOpEx		// 异步操作队列
-	chResult		chan IResult	// 异步操作结果队列
-	chStop			chan bool		// 结束通知(非阻塞)
+	*CbEngine              // bucket
+	chOp      chan IOpEx   // 异步操作队列
+	chResult  chan IResult // 异步操作结果队列
+	chStop    chan bool    // 结束通知(非阻塞)
 }
 
 // 创建对象
 func NewCbEngineEx() *CbEngineEx {
-	return &CbEngineEx{ NewCbEngine(), nil, nil, nil }
+	return &CbEngineEx{NewCbEngine(), nil, nil, nil}
 }
 
 // 获取名字
@@ -43,36 +47,38 @@ func (engine *CbEngineEx) Serve(param *ParamInit) (err error) {
 	if err := engine.CbEngine.Serve(param); err != nil {
 		return err
 	}
-	
+
 	// 初始化其他属性
-	engine.chOp			= make(chan IOpEx, param.MaxWait)
-	engine.chResult		= make(chan IResult, param.MaxWait * 2)
-	engine.chStop		= make(chan bool, 1)
-	
+	engine.chOp = make(chan IOpEx, param.MaxWait)
+	engine.chResult = make(chan IResult, param.MaxWait*2)
+	engine.chStop = make(chan bool, 1)
+
 	// 处理操作
 	go func() {
 		for op := range engine.chOp {
 			op.Exec(engine)
 		}
-		
+
 		// 通知操作完成
 		engine.chStop <- true
 	}()
-	
+
 	return nil
 }
 
 // stop
 func (engine *CbEngineEx) Stop() {
-	// 
-	if !engine.running { return }
-	
+	//
+	if !engine.running {
+		return
+	}
+
 	// 关闭操作队列
 	close(engine.chOp)
-	
+
 	// 等待操作完成
-	<- engine.chStop
-	
+	<-engine.chStop
+
 	// 关闭CbEngine
 	engine.CbEngine.Stop()
 }

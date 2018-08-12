@@ -1,11 +1,15 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // json消息 -- 格式: 消息大小 + 消息Id + 消息内容(json)
 package json
 
 // import
 import (
-	"encoding/json"
-
 	"core/net/msg"
+	"encoding/json"
 )
 
 // 序列化消息

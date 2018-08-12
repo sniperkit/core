@@ -1,11 +1,16 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // protobuf消息 -- 格式: 消息大小 + 消息Id + 消息内容(protobuf)
 package protobuf
 
 // import
 import (
-	"github.com/golang/protobuf/proto"
-
 	"core/net/msg"
+
+	"github.com/golang/protobuf/proto"
 )
 
 //// 消息

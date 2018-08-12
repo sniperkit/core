@@ -1,3 +1,8 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // 并行任务接口及调度：分长期任务和临时任务。临时任务执行后，会被清除。
 package task
 

@@ -1,11 +1,15 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // db操作
 package couchbase
 
-// 
-import (
+//
+
 //	"log"
 //	"errors"
-)
 
 //// 通过实现IHResInsert接口, 可以在couchbase.ProcAsynRes()中处理反馈
 //// 例: 获取数据
@@ -21,7 +25,8 @@ type IHResInsert interface {
 }
 
 // 函数接口
-type FuncHResInsert	func(data *OpInsertData, res *ResInsert)
+type FuncHResInsert func(data *OpInsertData, res *ResInsert)
+
 func (f FuncHResInsert) HandleInsert(data *OpInsertData, res *ResInsert) {
 	f(data, res)
 }
@@ -30,7 +35,7 @@ func (f FuncHResInsert) HandleInsert(data *OpInsertData, res *ResInsert) {
 type OpInsertEx struct {
 	OpInsertData
 	*ResInsert
-	handle		IHResInsert
+	handle IHResInsert
 }
 
 func NewOpInsertEx(key string, val []byte, info interface{}, handle IHResInsert) *OpInsertEx {
@@ -39,7 +44,7 @@ func NewOpInsertEx(key string, val []byte, info interface{}, handle IHResInsert)
 
 func (op *OpInsertEx) Exec(engine *CbEngineEx) {
 	added, err := engine.InsertSync(op.Key, op.Val)
-	
+
 	if op.handle != nil {
 		op.ResInsert = NewResInsert(added, err)
 		engine.AddChRes(op)
@@ -78,7 +83,8 @@ type IHResGet interface {
 }
 
 // 函数定义
-type FuncHResGet	func(data *OpGetData, res *ResGet)
+type FuncHResGet func(data *OpGetData, res *ResGet)
+
 func (f FuncHResGet) HandleGet(data *OpGetData, res *ResGet) {
 	f(data, res)
 }
@@ -87,7 +93,7 @@ func (f FuncHResGet) HandleGet(data *OpGetData, res *ResGet) {
 type OpGetEx struct {
 	OpGetData
 	*ResGet
-	handle		IHResGet
+	handle IHResGet
 }
 
 func NewOpGetEx(key string, info interface{}, handle IHResGet) *OpGetEx {
@@ -96,11 +102,11 @@ func NewOpGetEx(key string, info interface{}, handle IHResGet) *OpGetEx {
 
 func (op *OpGetEx) Exec(engine *CbEngineEx) {
 	res, err := engine.GetSync(op.Key)
-	
+
 	if op.handle != nil {
 		op.ResGet = NewResGet(res, err)
 		engine.AddChRes(op)
-	} 
+	}
 }
 
 func (op *OpGetEx) Handle() {
@@ -133,7 +139,8 @@ type IHResSet interface {
 }
 
 // 函数接口
-type FuncHResSet	func(data *OpSetData, res *ResSet)
+type FuncHResSet func(data *OpSetData, res *ResSet)
+
 func (f FuncHResSet) HandleSet(data *OpSetData, res *ResSet) {
 	f(data, res)
 }
@@ -142,7 +149,7 @@ func (f FuncHResSet) HandleSet(data *OpSetData, res *ResSet) {
 type OpSetEx struct {
 	OpSetData
 	*ResSet
-	handle		IHResSet
+	handle IHResSet
 }
 
 func NewOpSetEx(key string, val []byte, info interface{}, handle IHResSet) *OpSetEx {
@@ -151,7 +158,7 @@ func NewOpSetEx(key string, val []byte, info interface{}, handle IHResSet) *OpSe
 
 func (op *OpSetEx) Exec(engine *CbEngineEx) {
 	err := engine.SetSync(op.Key, op.Val)
-	
+
 	if op.handle != nil {
 		op.ResSet = NewResSet(err)
 		engine.AddChRes(op)

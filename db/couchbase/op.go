@@ -1,18 +1,22 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // db操作
 package couchbase
 
-// 
-import (
+//
+
 //	"log"
 //	"errors"
-)
 
 //// 异步添加记录(sql insert)
 //	if op, added := couchbase.InsertAsyn(k, val, true); !added {
 //		// 异步队列满了...
 //	} else {
 //		do something other......
-		
+
 //		// 等待db操作结果
 //		res := <-op.ChRes
 
@@ -26,29 +30,29 @@ func (engine *CbEngine) InsertSync(key string, val []byte) (bool, error) {
 
 // 新增记录结果
 type ResInsert struct {
-	added		bool
-	err			error
+	added bool
+	err   error
 }
 
 func NewResInsert(added bool, err error) *ResInsert {
 	return &ResInsert{added, err}
 }
 
-func (r *ResInsert) Ok() bool		{ return r.added }
-func (r *ResInsert) Exist() bool	{ return !r.added && nil == r.err }
-func (r *ResInsert) Error() error	{ return r.err }
+func (r *ResInsert) Ok() bool     { return r.added }
+func (r *ResInsert) Exist() bool  { return !r.added && nil == r.err }
+func (r *ResInsert) Error() error { return r.err }
 
 // OpInsertData
 type OpInsertData struct {
-	Key			string
-	Val			[]byte
-	Info		interface{}			// 缓存上层信息
+	Key  string
+	Val  []byte
+	Info interface{} // 缓存上层信息
 }
 
 // OpInsert 增加新记录. 存在或者失败则返回false
 type OpInsert struct {
 	OpInsertData
-	ChRes		chan *ResInsert
+	ChRes chan *ResInsert
 }
 
 func NewOpInsert(key string, val []byte, info interface{}, chRes chan *ResInsert) *OpInsert {
@@ -57,7 +61,7 @@ func NewOpInsert(key string, val []byte, info interface{}, chRes chan *ResInsert
 
 func (op *OpInsert) Exec(engine *CbEngine) {
 	added, err := engine.InsertSync(op.Key, op.Val)
-	
+
 	if op.ChRes != nil {
 		op.ChRes <- NewResInsert(added, err)
 	}
@@ -67,11 +71,11 @@ func (op *OpInsert) Exec(engine *CbEngine) {
 func (engine *CbEngine) InsertAsyn(key string, val []byte, info interface{}, needFeedback bool) (*OpInsert, bool) {
 	var chRes chan *ResInsert
 	if needFeedback {
-		chRes = make(chan *ResInsert, 1)		// 非阻塞
+		chRes = make(chan *ResInsert, 1) // 非阻塞
 	}
-	
+
 	var op = NewOpInsert(key, val, info, chRes)
-	
+
 	return op, engine.AddOp(op)
 }
 
@@ -80,7 +84,7 @@ func (engine *CbEngine) InsertAsyn(key string, val []byte, info interface{}, nee
 //		// 异步队列满了
 //	} else {
 //		do something other......
-		
+
 //		// 等待db操作结果
 //		res := <-op.ChRes
 
@@ -94,8 +98,8 @@ func (engine *CbEngine) GetSync(key string) ([]byte, error) {
 
 // 获取数据结果
 type ResGet struct {
-	Res			[]byte
-	Err			error
+	Res []byte
+	Err error
 }
 
 func NewResGet(res []byte, err error) *ResGet {
@@ -104,19 +108,19 @@ func NewResGet(res []byte, err error) *ResGet {
 
 // OpGetData
 type OpGetData struct {
-	Key			string
-	Info		interface{}			// 缓存上层信息
+	Key  string
+	Info interface{} // 缓存上层信息
 }
 
 // OpGet 获取数据
 type OpGet struct {
 	OpGetData
-	ChRes		chan *ResGet
+	ChRes chan *ResGet
 }
 
 func NewOpGet(key string, info interface{}, chRes chan *ResGet) *OpGet {
-//	if nil == chRes { panic("OpGet: chRes cannt be nil!") }
-	
+	//	if nil == chRes { panic("OpGet: chRes cannt be nil!") }
+
 	return &OpGet{OpGetData{key, info}, chRes}
 }
 
@@ -128,7 +132,7 @@ func (op *OpGet) Exec(engine *CbEngine) {
 func (engine *CbEngine) GetAsyn(key string, info interface{}) (*OpGet, bool) {
 	// 生成op
 	op := NewOpGet(key, info, make(chan *ResGet, 1))
-	
+
 	return op, engine.AddOp(op)
 }
 
@@ -137,7 +141,7 @@ func (engine *CbEngine) GetAsyn(key string, info interface{}) (*OpGet, bool) {
 //		// 异步队列满了...
 //	} else {
 //		do something other......
-		
+
 //		// 等待db操作结果
 //		res := <-op.ChRes
 
@@ -151,7 +155,7 @@ func (engine *CbEngine) SetSync(key string, val []byte) error {
 
 // 更新记录
 type ResSet struct {
-	Err			error
+	Err error
 }
 
 func NewResSet(err error) *ResSet {
@@ -160,15 +164,15 @@ func NewResSet(err error) *ResSet {
 
 // OpSetData
 type OpSetData struct {
-	Key			string
-	Val			[]byte
-	Info		interface{}			// 缓存上层信息
+	Key  string
+	Val  []byte
+	Info interface{} // 缓存上层信息
 }
 
 // OpSet 更新记录. 不存在, 则创建新的记录
 type OpSet struct {
 	OpSetData
-	ChRes		chan *ResSet
+	ChRes chan *ResSet
 }
 
 func NewOpSet(key string, val []byte, info interface{}, chRes chan *ResSet) *OpSet {
@@ -177,10 +181,10 @@ func NewOpSet(key string, val []byte, info interface{}, chRes chan *ResSet) *OpS
 
 func (op *OpSet) Exec(engine *CbEngine) {
 	err := engine.SetSync(op.Key, op.Val)
-	
+
 	if op.ChRes != nil {
 		op.ChRes <- NewResSet(err)
-	} 
+	}
 }
 
 // 异步添加新记录
@@ -189,12 +193,8 @@ func (engine *CbEngine) SetAsyn(key string, val []byte, info interface{}, needFe
 	if needFeedback {
 		chRes = make(chan *ResSet, 1)
 	}
-	
+
 	var op = NewOpSet(key, val, info, chRes)
-	
+
 	return op, engine.AddOp(op)
 }
-
-
-
-

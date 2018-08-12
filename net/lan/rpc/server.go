@@ -1,18 +1,21 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 package rpc
 
 import (
+	"core/net"
+	. "core/net/lan"
 	"sync"
 	"sync/atomic"
+	"util/logs"
 
 	"github.com/go-mangos/mangos"
 	"github.com/go-mangos/mangos/protocol/rep"
 	"github.com/go-mangos/mangos/transport/ipc"
 	"github.com/go-mangos/mangos/transport/tcp"
-
-	"util/logs"
-
-	"core/net"
-	. "core/net/lan"
 )
 
 var _ = logs.Debug

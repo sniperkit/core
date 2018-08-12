@@ -1,18 +1,21 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 package rpc
 
 import (
-	"sync"
+	"core/net/lan"
+	"errors"
 	"math/rand"
+	"sync"
+	"util/logs"
 
 	"github.com/go-mangos/mangos"
 	"github.com/go-mangos/mangos/protocol/req"
 	"github.com/go-mangos/mangos/transport/ipc"
 	"github.com/go-mangos/mangos/transport/tcp"
-
-	"util/logs"
-
-	"core/net/lan"
-	"errors"
 )
 
 var _ = logs.Debug
@@ -52,7 +55,7 @@ func (this *Client) Close() {
 func (this *Client) Call(raw []byte) ([]byte, error) {
 	e := this.Send(raw)
 	if e != nil {
-		return  nil, e
+		return nil, e
 	}
 	return this.Recv()
 }
@@ -79,7 +82,7 @@ type ClientPool struct {
 	SrvAddrArr []string
 
 	IdleClients []*Client
-	CurNum int
+	CurNum      int
 }
 
 func NewClientPool(cfg *PoolConfig) *ClientPool {
@@ -88,7 +91,7 @@ func NewClientPool(cfg *PoolConfig) *ClientPool {
 		return nil
 	}
 
-	p := &ClientPool{PoolConfig:cfg}
+	p := &ClientPool{PoolConfig: cfg}
 
 	return p
 }

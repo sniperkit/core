@@ -1,10 +1,14 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 package chanbuf
 
 import (
+	"core/net/msg"
 	"errors"
 	"net"
-
-	"core/net/msg"
 )
 
 var ESenderFull = errors.New("sender chan is full!")

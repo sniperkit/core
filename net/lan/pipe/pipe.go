@@ -1,23 +1,26 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 /**
 * 服务端有一个用来接受其他服务器消息的管道，和多个向其他服务器发送消息的管道
 **/
 package pipe
 
 import (
+	"core/net"
+	. "core/net/lan"
 	"errors"
 	"math/rand"
 	"sync"
+	"util/logs"
 
 	"github.com/go-mangos/mangos"
 	"github.com/go-mangos/mangos/protocol/pull"
 	"github.com/go-mangos/mangos/protocol/push"
 	"github.com/go-mangos/mangos/transport/ipc"
 	"github.com/go-mangos/mangos/transport/tcp"
-
-	"util/logs"
-
-	"core/net"
-	. "core/net/lan"
 )
 
 var _ = logs.Debug

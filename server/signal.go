@@ -1,10 +1,14 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 package server
 
 import (
 	"os"
 	"os/signal"
 	"syscall"
-
 	"util/run"
 )
 

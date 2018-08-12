@@ -1,15 +1,18 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // 消息分发器
 package dispatcher
 
 import (
+	"core/net"
+	"core/net/dispatcher/pb"
 	"fmt"
 	"sync"
 	"time"
-
 	"util/logs"
-
-	"core/net"
-	"core/net/dispatcher/pb"
 )
 
 var _ = logs.Debug

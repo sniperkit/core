@@ -1,11 +1,14 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 package server
 
 import (
-	"time"
-
-	"util/logs"
-
 	ctime "core/time"
+	"time"
+	"util/logs"
 )
 
 // 服务器每次更新后sleep时间

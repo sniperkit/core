@@ -1,9 +1,13 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 package server
 
 import (
 	"testing"
 	"time"
-
 	"util/logs"
 )
 

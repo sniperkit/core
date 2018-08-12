@@ -1,11 +1,15 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 package rpc
 
 import (
-	"testing"
-
 	. "core/net/lan"
-	"sync"
 	"fmt"
+	"sync"
+	"testing"
 )
 
 //
@@ -43,7 +47,7 @@ func returnClient(c *Client) {
 //
 func TestClient(t *testing.T) {
 	wg := &sync.WaitGroup{}
-	for i:=0; i<10; i++ {
+	for i := 0; i < 10; i++ {
 		wg.Add(1)
 		go testOneClient(t, wg, i)
 	}

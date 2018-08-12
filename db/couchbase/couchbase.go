@@ -1,13 +1,18 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // couchbase封装
 // 同步操作, 直接调用响应接口XXXSync()
 // 异步操作, 调用XXXAsyn(), 返回结果channel, 操作完成后底层会通知channel. channel由上层自己维护
 // 操作接口在op.go中实现
 package couchbase
 
-// 
+//
 import (
 	"log"
-	
+
 	gcb "github.com/couchbaselabs/go-couchbase"
 )
 
@@ -18,18 +23,18 @@ type IOp interface {
 
 // db初始化参数
 type ParamInit struct {
-	IP				string			`json:"ip"`
-	Bucket			string			`json:"bucket"`
-	Pwd				string			`json:"pwd"`
-	MaxWait			int				`json:"max_wait"`		// 最大待执行操作个数
+	IP      string `json:"ip"`
+	Bucket  string `json:"bucket"`
+	Pwd     string `json:"pwd"`
+	MaxWait int    `json:"max_wait"` // 最大待执行操作个数
 }
 
-// 
+//
 type CbEngine struct {
-	bucket			*gcb.Bucket		// bucket
-	chOp			chan IOp		// 异步操作队列
-	chStop			chan bool		// 结束通知(非阻塞)
-	running			bool			// 是否正在执行
+	bucket  *gcb.Bucket // bucket
+	chOp    chan IOp    // 异步操作队列
+	chStop  chan bool   // 结束通知(非阻塞)
+	running bool        // 是否正在执行
 }
 
 // 创建对象
@@ -47,60 +52,64 @@ func (engine *CbEngine) Name() string {
 //	// 获得bucket
 //	engine.bucket, err	= gcb.GetBucket(url(param), "default", param.Bucket)
 //	if err != nil { return }
-	
+
 //	// 初始化其他属性
 //	engine.chOp			= make(chan IOp, param.MaxWait)
 //	engine.chStop		= make(chan bool, 1)
 //	engine.running		= true
-	
+
 //	// 处理操作
 //	for op := range engine.chOp {
 //		op.Exec(engine)
 //	}
-	
+
 //	// 通知操作完成
 //	engine.chStop <- true
-	
+
 //	return nil
 //}
 
 func (engine *CbEngine) Serve(param *ParamInit) (err error) {
 	// debug log
 	//log.Println(url(param))
-	
+
 	// 获得bucket
-	engine.bucket, err	= gcb.GetBucket(url(param), "default", param.Bucket)
-	if err != nil { return }
-	
+	engine.bucket, err = gcb.GetBucket(url(param), "default", param.Bucket)
+	if err != nil {
+		return
+	}
+
 	// 初始化其他属性
-	engine.chOp			= make(chan IOp, param.MaxWait)
-	engine.chStop		= make(chan bool, 1)
-	engine.running		= true
-	
+	engine.chOp = make(chan IOp, param.MaxWait)
+	engine.chStop = make(chan bool, 1)
+	engine.running = true
+
 	// 处理操作
 	go func() {
 		for op := range engine.chOp {
 			op.Exec(engine)
 		}
-		
+
 		// 通知操作完成
 		engine.chStop <- true
 	}()
-	
+
 	return nil
 }
 
 // stop
 func (engine *CbEngine) Stop() {
-	// 
-	if !engine.running { return }
-	
+	//
+	if !engine.running {
+		return
+	}
+
 	// 关闭操作队列
 	close(engine.chOp)
-	
+
 	// 等待操作完成
-	<- engine.chStop
-	
+	<-engine.chStop
+
 	// 清理
 	engine.bucket.Close()
 	engine.running = false

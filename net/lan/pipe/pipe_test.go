@@ -1,11 +1,15 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 package pipe
 
 import (
+	. "core/net/lan"
 	"sync"
 	"testing"
 	"time"
-
-	. "core/net/lan"
 )
 
 var _ = time.Now

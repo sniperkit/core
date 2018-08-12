@@ -1,11 +1,15 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // 消息 -- 格式: 消息大小,消息id,消息体(消息大小＝消息id和消息体)
 package msg
 
 // import
 import (
-	"encoding/binary"
-
 	"core/buff"
+	"encoding/binary"
 )
 
 // 常量

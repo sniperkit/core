@@ -1,25 +1,27 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // 新增db记录(like sql insert)
 package couchbase
 
-// 
-import (
+//
+
 //	"log"
 //	"errors"
-	
-)
 
 //// 序列化
 //type IMarshaler interface {
 //	Marshal() ([]byte, error)
 //}
 
-
 // Add: 增加新记录. 存在或者失败则返回false
 
 // 不关心操作结果
 type OpAdd0 struct {
-	key			string
-	val			[]byte
+	key string
+	val []byte
 }
 
 func NewOpAdd0(key string, val []byte) *OpAdd0 {
@@ -36,22 +38,22 @@ func Add0(key string, val []byte) bool {
 
 // 新增记录结果
 type ResAdd struct {
-	added		bool
-	err			error
+	added bool
+	err   error
 }
 
 func NewResAdd(added bool, err error) *ResAdd {
 	return &ResAdd{added, err}
 }
 
-func (r *ResAdd) Ok() bool		{ return r.added }
-func (r *ResAdd) Exist() bool	{ return !r.added && nil == r.err }
-func (r *ResAdd) Error() error	{ return r.err }
+func (r *ResAdd) Ok() bool     { return r.added }
+func (r *ResAdd) Exist() bool  { return !r.added && nil == r.err }
+func (r *ResAdd) Error() error { return r.err }
 
 // 关心操作结果
 type OpAdd1 struct {
 	*OpAdd0
-	chRes		chan<- *ResAdd
+	chRes chan<- *ResAdd
 }
 
 func NewOpAdd1(key string, val []byte, chRes chan<- *ResAdd) *OpAdd1 {

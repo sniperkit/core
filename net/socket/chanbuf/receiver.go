@@ -1,13 +1,16 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 package chanbuf
 
 import (
+	"core/net/msg"
 	"errors"
 	"fmt"
 	"io"
 	"net"
-
-	"core/net/msg"
-
 	"util/logs"
 )
 

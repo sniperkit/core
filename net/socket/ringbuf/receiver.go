@@ -1,12 +1,16 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // 消息接收及缓冲 -- 环形缓冲
 package ringbuf
 
 // import
 import (
-	"net"
-
 	"core/buff"
 	"core/net/msg"
+	"net"
 )
 
 //

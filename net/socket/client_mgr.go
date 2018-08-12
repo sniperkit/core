@@ -1,3 +1,8 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // 服务器上的连接
 package socket
 
@@ -7,7 +12,6 @@ import (
 	"fmt"
 	"net"
 	"sync"
-
 	"util/logs"
 )
 

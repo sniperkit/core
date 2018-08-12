@@ -1,8 +1,12 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 package event
 
 import (
 	"testing"
-
 	"util/logs"
 )
 

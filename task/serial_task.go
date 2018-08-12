@@ -1,3 +1,8 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // 串行任务接口及调度: 执行后会清空任务
 package task
 

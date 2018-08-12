@@ -1,16 +1,19 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 // 服务器上的连接
 package socket
 
 //
 import (
+	"core/net/socket/chanbuf"
 	"net"
 	"sync"
 	"sync/atomic"
 	"time"
-
 	"util/logs"
-
-	"core/net/socket/chanbuf"
 )
 
 // 参数

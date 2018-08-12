@@ -1,13 +1,16 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 package dispatcher
 
 import (
 	//"fmt"
 	//"strings"
-
-	"util/logs"
-
 	"core/net"
 	"core/net/dispatcher/pb"
+	"util/logs"
 )
 
 var _ = logs.Debug

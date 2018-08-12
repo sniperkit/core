@@ -1,13 +1,17 @@
+/*
+Sniperkit-Bot
+- Status: analyzed
+*/
+
 //
 package socket
 
 //
 import (
-	"net"
-	"time"
-
 	"core/net/msg"
 	"core/server"
+	"net"
+	"time"
 	"util/logs"
 )
 
